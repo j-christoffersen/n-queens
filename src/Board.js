@@ -83,11 +83,8 @@
       this.get(rowIndex).forEach(function(space) {
         count += space;
       });
-      if (count > 1) {
-        return true;
-      } else {
-        return false;
-      }
+      
+      return count > 1;
     },
 
     // test if any rows on this board contain conflicts
@@ -112,11 +109,8 @@
       for (var i = 0; i < this.get('n'); i++) {
         count += this.get(i)[colIndex];
       }
-      if (count > 1) {
-        return true;
-      } else {
-        return false;
-      }
+      
+      return count > 1;
     },
 
     // test if any columns on this board contain conflicts
@@ -143,11 +137,8 @@
           count += this.get(i)[majorDiagonalColumnIndexAtFirstRow + i];
         }
       }
-      if (count > 1) {
-        return true;
-      } else {
-        return false;
-      }
+      
+      return count > 1;
     },
 
     // test if any major diagonals on this board contain conflicts
@@ -174,11 +165,8 @@
           count += this.get(i)[minorDiagonalColumnIndexAtFirstRow - i];
         }
       }
-      if (count > 1) {
-        return true;
-      } else {
-        return false;
-      }
+      
+      return count > 1;
     },
 
     // test if any minor diagonals on this board contain conflicts

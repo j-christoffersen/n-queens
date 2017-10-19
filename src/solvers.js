@@ -19,14 +19,7 @@ window.findNRooksSolution = function(n) {
   var board = new Board({n: n});
   
   for (var i = 0; i < n; i++) {
-    var j = 0;
-    for (var j = 0; j < n; j++) {
-      board.togglePiece(i, j);
-      if (!board.hasAnyRooksConflicts()) {
-        break;
-      }
-      board.togglePiece(i, j);
-    }
+    board.togglePiece(i, i);
   }
   
   solution = board.rows();
