@@ -50,8 +50,6 @@ window.countNRooksSolutions = function(n) {
 
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n queens placed such that none of them can attack each other
 window.findNQueensSolution = function(n) {
-  console.log(n);
-  var solution = undefined;
   
   var board = new Board({n: n});
 
@@ -60,7 +58,7 @@ window.findNQueensSolution = function(n) {
       board.togglePiece(row, col);
       if (!board.hasAnyQueenConflictsOn(row, col)) {
         if (row === n - 1) {
-          return board.rows();
+          return true;
         } else {
           var sol = addNextQueen(row + 1);
           if (sol) {
@@ -70,9 +68,11 @@ window.findNQueensSolution = function(n) {
       }
       board.togglePiece(row, col);
     }
+    return false;
   };
   
-  solution = addNextQueen(0) || board.rows();
+  addNextQueen(0);
+  var solution = board.rows();
   
 
 
@@ -85,21 +85,41 @@ window.countNQueensSolutions = function(n) {
   
   var board = new Board({n: n});
   var solutionCount = 0;
-  var addNextQueen = function(row) {
+  
+  var addNextQueen = function(row, d = 1) {
     for (var col = 0; col < n; col++) {
       board.togglePiece(row, col);
       if (!board.hasAnyQueenConflictsOn(row, col)) {
         if (row === n - 1) {
-          solutionCount++;
+          solutionCount += d;
         } else {
-          addNextQueen(row + 1);
+          addNextQueen(row + 1, d);
         }
       }
       board.togglePiece(row, col);
     }
   };
   
-  addNextQueen(0);
+  var addNextQueenSymm = function(row) {
+    for (var col = 0; col < n / 2; col++) {
+      board.togglePiece(row, col);
+      if (!board.hasAnyQueenConflictsOn(row, col)) {
+        if (row === n - 1) {
+          solutionCount++;
+        } else {
+          if (col < Math.floor(n / 2)) {
+            addNextQueen(row + 1, 2);
+          } else {
+            addNextQueenSymm(row + 1);
+          }
+        }
+      }
+      board.togglePiece(row, col);
+    }
+  };
+  
+  // addNextQueen(0);
+  addNextQueenSymm(0);
   
   if (n === 0) {
     solutionCount = 1;
