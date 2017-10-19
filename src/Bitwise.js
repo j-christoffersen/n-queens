@@ -18,13 +18,8 @@
       this.get('b')[r] ^= (1 << c);
     },
 
-    hasQueenConflictsAt: function(rowIndex, colIndex) {
-      return (
-        this.hasRowConflictAt(rowIndex) ||
-        this.hasColConflictAt(colIndex) ||
-        this.hasMajorDiagonalConflictAt(this._getFirstRowColumnIndexForMajorDiagonalOn(rowIndex, colIndex)) ||
-        this.hasMinorDiagonalConflictAt(this._getFirstRowColumnIndexForMinorDiagonalOn(rowIndex, colIndex))
-      );
+    hasQueenConflictAt: function(r, c) {
+      return this.hasRowConflictAt(r, c) || this.hasColConflictAt(r, c) || this.hasMajorDiagonalConflictAt(r, c) || this.hasMinorDiagonalConflictAt(r, c);
     },
 
 
@@ -45,12 +40,7 @@
     //
     // test if a specific row on this board contains a conflict
     hasRowConflictAt: function(r, c) {
-      var count = 0;
-      this.get(r).forEach(function(space) {
-        count += space;
-      });
-      
-      return count > 1;
+      return this.get('b')[r] !== 0;
     },
 
 
@@ -60,12 +50,7 @@
     //
     // test if a specific column on this board contains a conflict
     hasColConflictAt: function(r, c) {
-      var count = 0;
-      for (var i = 0; i < this.get('n'); i++) {
-        count += this.get(i)[c];
-      }
-      
-      return count > 1;
+      return Boolean(this.get('b').reduce((acc, row) => acc + row & (1 << c)), 0);
     },
 
 
@@ -75,7 +60,7 @@
     //
     // test if a specific major diagonal on this board contains a conflict
     hasMajorDiagonalConflictAt: function(r, c) {
-      // TODO
+      return Boolean(this.get('b').reduce((acc, row, i) => acc + (row & (1 << (c - r + i))), 0));
     },
 
 
@@ -84,8 +69,8 @@
     // --------------------------------------------------------------
     //
     // test if a specific minor diagonal on this board contains a conflict
-    hasMinorDiagonalConflictAt: function(minorDiagonalColumnIndexAtFirstRow) {
-      // TODO
+    hasMinorDiagonalConflictAt: function(r, c) {
+      return Boolean(this.get('b').reduce((acc, row, i) => acc + (row & (1 << (c + r - i))), 0));
     },
 
     // test if any minor diagonals on this board contain conflicts
@@ -104,15 +89,15 @@ window.CNQS = function(n) {
   var solutionCount = 0;
   var addNextQueen = function(row) {
     for (var col = 0; col < n; col++) {
-      board.togglePiece(row, col);
-      if (!board.hasAnyQueenConflictsOn(row, col)) {
+      if (!board.hasQueenConflictAt(row, col)) {
+        board.togglePiece(row, col);
         if (row === n - 1) {
           solutionCount++;
         } else {
           addNextQueen(row + 1);
         }
+        board.togglePiece(row, col);
       }
-      board.togglePiece(row, col);
     }
   };
   

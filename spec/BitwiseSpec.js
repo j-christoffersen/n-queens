@@ -5,7 +5,7 @@ describe('Bitiwise', function() {
   };
   
   var bitify = function(matrix) {
-    return matrix.map(row => row.reduce((acc, space, index) => { acc + space * (1 << index); }, 0));
+    return matrix.map(row => row.reduce((acc, space, index) => { return acc + space * (1 << index); }, 0));
   };
   
   describe('togglePiece', function() {
@@ -24,7 +24,7 @@ describe('Bitiwise', function() {
   var verifyConflictTypes = function(expectedConflicts, matrix) {
     // The Board() constructor will accept a matrix and build that into a (Backbone) Board object (as defined in Board.js)
     var board = new Board({b: bitify(matrix)});
-    _.map('row col  majorDiagonal minorDiagonal queen'.split(' '), function(conflictType) {
+    _.map('row col majorDiagonal minorDiagonal queen'.split(' '), function(conflictType) {
       var conflictDetected = board['has' + capitalize(conflictType) + 'ConflictAt'](1, 1);
       var conflictExpected = _(expectedConflicts).contains(conflictType);
       var message = conflictExpected ? 'should' : 'should not';
@@ -36,7 +36,7 @@ describe('Bitiwise', function() {
   };
 
   describe('Empty board', function() {
-    verifyConflictTypes([''], [
+    verifyConflictTypes([], [
       [0, 0, 0, 0],
       [0, 0, 0, 0],
       [0, 0, 0, 0],
@@ -87,4 +87,18 @@ describe('Bitiwise', function() {
       [0, 0, 0, 0]
     ]);
   });
+  
+  describe('CNQS()', function() {
+
+    it('finds the number of valid solutions for n of 0-8', function() {
+      _.range(0, 9).map(function(n) {
+        var solutionCount = CNQS(n);
+        var expectedSolutionCount = [1, 1, 0, 0, 2, 10, 4, 40, 92, 352, 724, 2680, 14200, 73712][n];
+
+        expect(solutionCount).to.be.equal(expectedSolutionCount);
+      });
+    });
+
+  });
+  
 });
