@@ -86,23 +86,36 @@
 }());
 
 
-window.CNQS = n => {
+window.N = (n, b, s, q) => (
   
-  b = Array(n).fill(0);
-  s = n == 0 ? 1 : 0;
-  q = r => {
-    var c = -1;
-    while (++c < n) {
-      var m = 1 << c;
-      b.some((R, i) => R & (m | 1 << c - r + i | 1 << c + r - i)) ? 0 : (
-        b[r] ^= m,
-        r == n - 1 ? s++ : q(r + 1),
-        b[r] ^= m
+  b = Array(n).fill(0),
+  s = n < 1 ? 1 : 0,
+  q = (r, m = 1) => {
+    for (;m < 1 << n; m *= 2) 
+      b.some((R, i) => R & (m | m >> r - i | m << r - i)) || (
+        b[r] = m,
+        r < n - 1 ? q(r + 1) : s++,
+        b[r] = 0
       );
-    }
-  };
+    
+  },
   
-  q(0);
+  q(0),
 
-  return s;
-};
+  s
+)
+
+// window.N = (n, b, s, q, R, m = 1, c = 0, mj = 0, mn = 0) => {
+//   s = n < 1 ? 1 : 0;
+//   for (;m < 1; m *= 2) {
+    
+//   }
+  
+//   return s;
+// }
+
+
+
+
+
+
