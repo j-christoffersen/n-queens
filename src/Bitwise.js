@@ -50,7 +50,10 @@
     //
     // test if a specific column on this board contains a conflict
     hasColConflictAt: function(r, c) {
-      return Boolean(this.get('b').reduce((acc, row) => acc + row & (1 << c)), 0);
+      console.log('hello');
+      return Boolean(this.get('b').reduce((acc, row) => {
+        return acc + row & (1 << c);
+      }));
     },
 
 
@@ -83,29 +86,23 @@
 }());
 
 
-window.CNQS = function(n) {
+window.CNQS = n => {
   
-  var board = new Board({n: n});
-  var solutionCount = 0;
-  var addNextQueen = function(row) {
-    for (var col = 0; col < n; col++) {
-      if (!board.hasQueenConflictAt(row, col)) {
-        board.togglePiece(row, col);
-        if (row === n - 1) {
-          solutionCount++;
-        } else {
-          addNextQueen(row + 1);
-        }
-        board.togglePiece(row, col);
-      }
+  b = Array(n).fill(0);
+  s = n == 0 ? 1 : 0;
+  q = r => {
+    var c = -1;
+    while (++c < n) {
+      var m = 1 << c;
+      b.some((R, i) => R & (m | 1 << c - r + i | 1 << c + r - i)) ? 0 : (
+        b[r] ^= m,
+        r == n - 1 ? s++ : q(r + 1),
+        b[r] ^= m
+      );
     }
   };
   
-  addNextQueen(0);
-  
-  if (n === 0) {
-    solutionCount = 1;
-  }
-  console.log('Number of solutions for ' + n + ' queens:', solutionCount);
-  return solutionCount;
+  q(0);
+
+  return s;
 };

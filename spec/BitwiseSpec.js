@@ -24,7 +24,7 @@ describe('Bitiwise', function() {
   var verifyConflictTypes = function(expectedConflicts, matrix) {
     // The Board() constructor will accept a matrix and build that into a (Backbone) Board object (as defined in Board.js)
     var board = new Board({b: bitify(matrix)});
-    _.map('row col majorDiagonal minorDiagonal queen'.split(' '), function(conflictType) {
+    _.map('row col majorDiagonal minorDiagonal'.split(' '), function(conflictType) {
       var conflictDetected = board['has' + capitalize(conflictType) + 'ConflictAt'](1, 1);
       var conflictExpected = _(expectedConflicts).contains(conflictType);
       var message = conflictExpected ? 'should' : 'should not';
@@ -55,9 +55,9 @@ describe('Bitiwise', function() {
 
   describe('Board with col conflicts', function() {
     verifyConflictTypes(['col', 'rooks', 'queen'], [
-      [0, 0, 0, 0],
-      [0, 0, 0, 0],
       [0, 1, 0, 0],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
       [0, 0, 0, 0]
     ]);
   });
