@@ -92,7 +92,7 @@ describe('Bitiwise', function() {
 
     it('finds the number of valid solutions for n of 0-8', function() {
       _.range(0, 9).map(function(n) {
-        var solutionCount = N(n);
+        var solutionCount = CNQS(n);
         var expectedSolutionCount = [1, 1, 0, 0, 2, 10, 4, 40, 92, 352, 724, 2680, 14200, 73712][n];
 
         expect(solutionCount).to.be.equal(expectedSolutionCount);

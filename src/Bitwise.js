@@ -85,34 +85,39 @@
 
 }());
 
-
-window.N = (n, b, s, q) => (
+// 151 char
+// window.N = (n, b, s, q) => (
   
-  b = Array(n).fill(0),
-  s = n < 1 ? 1 : 0,
-  q = (r, m = 1) => {
-    for (;m < 1 << n; m *= 2) 
-      b.some((R, i) => R & (m | m >> r - i | m << r - i)) || (
-        b[r] = m,
-        r < n - 1 ? q(r + 1) : s++,
-        b[r] = 0
-      );
+//   b = Array(n).fill(0),
+//   s = n < 1 ? 1 : 0,
+//   q = (r, m = 1) => {
+//     for (;m < 1 << n; m *= 2) 
+//       b.some((R, i) => R & (m | m >> r - i | m << r - i)) || (
+//         b[r] = m,
+//         r < n - 1 ? q(r + 1) : s++,
+//         b[r] = 0
+//       );
     
-  },
+//   },
   
-  q(0),
+//   q(0),
 
-  s
-)
+//   s
+// )
 
-// window.N = (n, b, s, q, R, m = 1, c = 0, mj = 0, mn = 0) => {
-//   s = n < 1 ? 1 : 0;
-//   for (;m < 1; m *= 2) {
-    
-//   }
-  
-//   return s;
-// }
+window.CNQS = function(n) {
+  solutionCount = N(n);
+  console.log('Number of solutions for ' + n + ' queens:', solutionCount);
+  return solutionCount;
+};
+
+window.N = (n, r = 0, c, mj, mn, s = 0, m = 1) => {
+
+  for (;m < 1 << n && r < n; m *= 2) m & (c | mj | mn) || (s += N(n, r + 1, c | m, (mj | m) >> 1, (mn | m) << 1));
+      
+  return r < n ? s : 1;
+
+};
 
 
 
